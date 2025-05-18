@@ -1,0 +1,65 @@
+using System.ComponentModel;
+using My.PlayerController;
+using UnityEngine;
+
+namespace My.Interactables
+{
+    public class PlayerInteract : PlayerSystem
+    {
+        [Header("Raycast Settings")]
+        [SerializeField]
+        private float _maxDistance = 3f;
+        [SerializeField]
+        private LayerMask _layerMask;
+
+        [Header("Debugging")]
+        [SerializeField]
+        [ReadOnly(true)]
+        private InteractableCollider _interactable;
+        [SerializeField]
+        private bool _debugRay = true;
+
+        private void Update()
+        {
+            InteractionScan();
+        }
+
+        private void InteractionScan()
+        {
+            Ray ray = new Ray(character.Camera.transform.position, character.Camera.transform.forward);
+            if (_debugRay)
+                Debug.DrawRay(ray.origin, ray.direction * _maxDistance, Color.red);
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, _maxDistance, _layerMask))
+            {
+                if (hit.collider.TryGetComponent<InteractableCollider>(out _interactable))
+                {
+                    // add the ui prompt here
+                    Debug.Log(hit.collider.name);
+                }
+            }
+            else
+            {
+                _interactable = null;
+            }
+        }
+
+        public void Interact()
+        {
+            if (_interactable != null)
+            {
+                _interactable.Interactable.BaseInteract();
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (character.Camera != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(character.Camera.transform.position, character.Camera.transform.forward * (_maxDistance + 0.5f));
+            }
+        }
+    }
+}
