@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using My.PlayerController;
+using My.Assets.Scripts.Player.v1;
 using UnityEngine;
 
 namespace My.Interactables
