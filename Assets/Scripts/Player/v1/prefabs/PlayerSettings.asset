@@ -9,7 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f7fd598606fdad42b5a7b821f2275a9, type: 3}
-  m_Name: Player1
+  m_Script: {fileID: 11500000, guid: 7a08775b1e1bb2d4baddcb64d7b3de12, type: 3}
+  m_Name: PlayerSettings
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: c7edd6ae140cbf447bb00ff4fa8262d8, type: 2}
+  InvertX: 0
+  InvertY: 0
+  RotationSpeed: 1
+  RotationSharpness: 10000
+  DefaultVerticalAngle: 20
+  MinVerticalAngle: -90
+  MaxVerticalAngle: 90

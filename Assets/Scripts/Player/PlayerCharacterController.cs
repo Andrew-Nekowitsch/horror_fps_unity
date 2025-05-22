@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using KinematicCharacterController;
+using My.PlayerController;
 using UnityEngine;
 
 namespace My.KinematicWithInputSystem
 {
     [RequireComponent(typeof(KinematicCharacterMotor))]
-    public class PlayerCharacterController : MonoBehaviour, ICharacterController
+    public class PlayerCharacterController : PlayerSystem, ICharacterController
     {
         private KinematicCharacterMotor Motor;
 
@@ -29,8 +30,6 @@ namespace My.KinematicWithInputSystem
         public List<Collider> IgnoredColliders = new List<Collider>();
         public float BonusOrientationSharpness = 10f;
         public Vector3 Gravity = new Vector3(0, -30f, 0);
-        public Transform MeshRoot;
-        public Transform CameraFollowPoint;
         public float CrouchedCapsuleHeight = 1f;
 
         private Collider[] _probedColliders = new Collider[8];
@@ -47,16 +46,16 @@ namespace My.KinematicWithInputSystem
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
-
         public bool FramePerfectRotation = true;
-
         private InputReader _inputReader;
-        [SerializeField]
-        private Player _player;
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
+            
+            Motor = GetComponent<KinematicCharacterMotor>();
             Motor.CharacterController = this;
+            // player.Id.Character.CharacterController = this;
         }
 
         public void SetInputReader(InputReader inputReader)
@@ -150,7 +149,7 @@ namespace My.KinematicWithInputSystem
             {
                 _isCrouching = true;
                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
+                player.Id.Character.Parts.MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
             }
         }
 
@@ -162,7 +161,7 @@ namespace My.KinematicWithInputSystem
 
                 Quaternion newRotation = default;
                 HandleRotation(ref newRotation, deltaTime);
-                MeshRoot.rotation = newRotation;
+                player.Id.Character.Parts.MeshRoot.rotation = newRotation;
             }
         }
 
@@ -347,7 +346,7 @@ namespace My.KinematicWithInputSystem
                 else
                 {
                     // If no obstructions, uncrouch
-                    MeshRoot.localScale = new Vector3(1f, 1f, 1f);
+                    player.Id.Character.Parts.MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                     _isCrouching = false;
                 }
             }
@@ -409,12 +408,5 @@ namespace My.KinematicWithInputSystem
         public void OnDiscreteCollisionDetected(Collider hitCollider)
         {
         }
-
-        //internal void SetDependencies(ClientPlayer clientPlayer)
-        //{
-        //    _player = clientPlayer.GetPlayer();
-        //    SetInputReader(_player.Settings._inputReader);
-        //    Motor = clientPlayer.GetKinematicCharacterMotor();
-        //}
     }
 }

@@ -58,25 +58,25 @@ namespace My.KinematicWithInputSystem
         {
             if (PlayerCameraTransform)
             {
-                if (_player.Settings.InvertX)
+                if (_player.Id.Settings.InvertX)
                 {
                     rotationInput.x *= -1f;
                 }
-                if (_player.Settings.InvertY)
+                if (_player.Id.Settings.InvertY)
                 {
                     rotationInput.y *= -1f;
                 }
 
                 // Process rotation input
-                Quaternion rotationFromInput = Quaternion.Euler(PlayerCameraTransform.up * (rotationInput.x * _player.Settings.RotationSpeed));
+                Quaternion rotationFromInput = Quaternion.Euler(PlayerCameraTransform.up * (rotationInput.x * _player.Id.Settings.RotationSpeed));
                 PlanarDirection = rotationFromInput * PlanarDirection;
                 PlanarDirection = Vector3.Cross(PlayerCameraTransform.up, Vector3.Cross(PlanarDirection, PlayerCameraTransform.up));
                 Quaternion planarRot = Quaternion.LookRotation(PlanarDirection, PlayerCameraTransform.up);
 
-                _targetVerticalAngle -= (rotationInput.y * _player.Settings.RotationSpeed);
-                _targetVerticalAngle = Mathf.Clamp(_targetVerticalAngle, _player.MinVerticalAngle, _player.MaxVerticalAngle);
+                _targetVerticalAngle -= (rotationInput.y * _player.Id.Settings.RotationSpeed);
+                _targetVerticalAngle = Mathf.Clamp(_targetVerticalAngle, _player.Id.Settings.MinVerticalAngle, _player.Id.Settings.MaxVerticalAngle);
                 Quaternion verticalRot = Quaternion.Euler(_targetVerticalAngle, 0, 0);
-                targetRotation = Quaternion.Slerp(CameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-_player.Settings.RotationSharpness * Time.deltaTime));
+                targetRotation = Quaternion.Slerp(CameraTransform.rotation, planarRot * verticalRot, 1f - Mathf.Exp(-_player.Id.Settings.RotationSharpness * Time.deltaTime));
 
                 _character.SetLookRotation(targetRotation);
             }

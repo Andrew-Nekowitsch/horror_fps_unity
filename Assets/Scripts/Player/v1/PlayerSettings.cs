@@ -1,13 +1,10 @@
 using UnityEngine;
 
-namespace My.KinematicWithInputSystem
+namespace My.Assets.Scripts.Player.v1
 {
-    [CreateAssetMenu(menuName = "My/PlayerSettings")]
+    [CreateAssetMenu(menuName = "Player/PlayerSettings/v1")]
     public class PlayerSettings : ScriptableObject
     {
-        public InputReader _inputReader;
-
-
         public bool InvertX = false;
         public bool InvertY = false;
 

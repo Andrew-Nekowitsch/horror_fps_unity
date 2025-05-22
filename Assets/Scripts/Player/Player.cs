@@ -1,31 +1,11 @@
-using System;
-using My.Interactables;
 using UnityEngine;
+using My.PlayerController;
 
 namespace My.KinematicWithInputSystem
 {
-    [RequireComponent(typeof(PlayerCharacterController))]
     public class Player : MonoBehaviour
     {
-        private FPSCamera FPCamera;
-        private Transform CameraFollowPoint;
-        private PlayerCharacterController Character;
-        private PlayerInteract Interact;
-
-        public PlayerSettings Settings;
-
-        [Header("Rotation")]
-        [Range(-90f, 90f)]
-        public float DefaultVerticalAngle = 20f;
-        [Range(-90f, 90f)]
-        public float MinVerticalAngle = -90f;
-        [Range(-90f, 90f)]
-        public float MaxVerticalAngle = 90f;
-
-        private void Start()
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        public PlayerId Id;
 
         private void Update()
         {
@@ -37,7 +17,27 @@ namespace My.KinematicWithInputSystem
 
         void OnValidate()
         {
-            DefaultVerticalAngle = Mathf.Clamp(DefaultVerticalAngle, MinVerticalAngle, MaxVerticalAngle);
+            if (Id == null)
+            {
+                return;
+            }
+            if (Id.Settings == null)
+            {
+                Id.Settings = ScriptableObject.CreateInstance<PlayerSettings>();
+            }
+            Id.Settings.DefaultVerticalAngle = Mathf.Clamp(Id.Settings.DefaultVerticalAngle, Id.Settings.MinVerticalAngle, Id.Settings.MaxVerticalAngle);
+        }
+
+        private void Start()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+
+            // Tell camera to follow transform
+            Id.Character.CharacterCamera.SetFollowTransform(Id.Character.CameraFollowPoint);
+
+            // Ignore the character's collider(s) for camera obstruction checks
+            Id.Character.CharacterCamera.IgnoredColliders.Clear();
+            Id.Character.CharacterCamera.IgnoredColliders.AddRange(Id.Character.CharacterController.GetComponentsInChildren<Collider>());
         }
     }
 }

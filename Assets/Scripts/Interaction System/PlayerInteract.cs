@@ -26,7 +26,7 @@ namespace My.Interactables
 
         private void InteractionScan()
         {
-            Ray ray = new Ray(character.Camera.transform.position, character.Camera.transform.forward);
+            Ray ray = new Ray(player.Id.Character.Camera.transform.position, player.Id.Character.Camera.transform.forward);
             if (_debugRay)
                 Debug.DrawRay(ray.origin, ray.direction * _maxDistance, Color.red);
 
@@ -55,10 +55,10 @@ namespace My.Interactables
 
         private void OnDrawGizmos()
         {
-            if (character.Camera != null)
+            if (player != null && player.Id.Character.Camera != null)
             {
                 Gizmos.color = Color.blue;
-                Gizmos.DrawRay(character.Camera.transform.position, character.Camera.transform.forward * (_maxDistance + 0.5f));
+                Gizmos.DrawRay(player.Id.Character.Camera.transform.position, player.Id.Character.Camera.transform.forward * (_maxDistance + 0.5f));
             }
         }
     }
